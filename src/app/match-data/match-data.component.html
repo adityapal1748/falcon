@@ -1,0 +1,137 @@
+<div class="right-section" *ngIf="!!selectedMatch">
+    <div class="match-info">
+        <h3>{{ selectedMatch.name }}</h3>
+        <div class="bet-options">
+            <div *ngFor="let option of selectedMatch.options" class="bet-option">
+                <span>{{ option.type }}</span>
+                <span>{{ option.value }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="match-pnl-container">
+        <h3>Match PnL</h3>
+        <table class="match-table">
+            <!-- <thead>
+                <tr>
+                    <th>Option</th>
+                    <th>Radar</th>
+                    <th>Falcon</th>
+                    <th>SinLimit</th>
+                    <th>SinRisk</th>
+                    <th>SinBet</th>
+                    <th>Stake</th>
+                    <th>P&L</th>
+                    <th>MultiRisk</th>
+                    <th>MultiDist</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+
+                <ng-container *ngFor="let item of matchPnLData">
+                    <tr *ngFor="let row of item.rows">
+                        <td>{{ row.type }}</td>
+                        <td>{{ row.radar }}</td>
+                        <td>{{ row.falcon }}</td>
+                        <td colspan="7">Stake: {{ row.stake }}</td>
+                    </tr>
+                </ng-container>
+            </tbody> -->
+            <tbody>
+                <tr>
+                    <th>Option</th>
+                    <th >Radar</th>
+                    <th>Falcon</th>
+                    <th>SinLimit</th>
+                    <th>SinRisk</th>
+                    <th>SinBet</th>
+                    <th>Stake</th>
+                    <th>P&L</th>
+                    <th>MultiRisk</th>
+                    <th>MultiDist</th>
+                </tr>
+                <ng-container *ngFor="let item of matchPnLData; let i = index">
+                    <!-- Render Option Row as a header -->
+                    <tr >
+                        <td class="option-header">
+                            <strong>{{ item.option }}</strong>
+                        </td>
+                        <td class="pr-pl-8 option-header">{{ item.radar }}</td>
+                        <td class="pr-pl-8 option-header">{{ item.falcon }}</td>
+                        <td class="sinLimit option-header">{{ item.sinLimit }}</td>
+                        <td class="pr-pl-8">{{ item.sinRisk }}</td>
+                        <td class="pr-pl-8">{{ item.sinBet }}</td>
+                        <td class="pr-pl-8">{{ item.stake }}</td>
+                        <td class="pr-pl-8">{{ item.pnl }}</td>
+                        <td class="pr-pl-8">{{ item.multiRisk }}</td>
+                        <td class="pr-pl-8">{{ item.multiDist }}</td>
+                    </tr>
+                    <!-- Loop through each row in the current item's rows array -->
+                    <tr *ngFor="let row of item.rows;let j = index">
+                        <td>{{ row.type }}</td>
+                        <td>{{ row.radar }}</td>
+                        <td>
+                            <div>
+                                <div *ngIf="!row.isEditingFalcon" (click)="toggleEdit(i, j, 'falcon')"
+                                [ngClass]="{ 'highlight-red': row.falcon !== row.initialFalcon }" class="editable-div">
+                                <span class="pd-8 d-block">{{ row.falcon }}</span> 
+                            </div>
+                            <input *ngIf="row.isEditingFalcon" #inputField [id]="'falcon-input-' + i + '-' + j"
+                                type="text" (blur)="saveEdit(row, 'falcon')" [value]="row.falcon"
+                                (keydown)="handleArrowNavigation($event, i, j, 'falcon',row)" class="editable-input" />
+                            </div>
+                            
+
+                        </td>
+                        <td >
+                            <div *ngIf="!row.isEditingStake" [ngStyle]="{
+                                'background-color': getProgressBarBackground(row),
+                                'width': getPixel(row) + 'px'
+                              }" (click)="toggleEdit(i, j, 'stake')" class="container-stake"></div>
+
+                            <div *ngIf="!row.isEditingStake" (click)="toggleEdit(i, j, 'stake')" class="stake-data">
+                                {{ row.stake }}
+                            </div>
+                            <input *ngIf="row.isEditingStake" #stakeInputField [id]="'stake-input-' + i + '-' + j"
+                                type="text" [value]="row.stake" (blur)="saveEdit(row, 'stake')"
+                                (keydown)="handleArrowNavigation($event, i, j, 'stake',row)" class="editable-input" />
+
+                        </td>
+                        <td>
+                            {{row.sinRisk}}
+                        </td>
+                        <td>
+                            {{row.sinBet}}
+                        </td>
+                        <td>
+                            {{row.sinStake}}
+                        </td>
+                        <td>
+                            {{row.pnl}}
+                        </td>
+                        <td>
+                            {{row.multiRisk}}
+                        </td>
+                        <td>
+                            {{row.multiDist}}
+                        </td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>
+    </div>
+
+
+</div>
+
+<div class="text-align-center" *ngIf="!selectedMatch">
+    <div class="welcome-screen">
+        <div class="welcome-content">
+            <img src="assets/falcon-img.svg" alt="" width="52">
+          <h1>Welcome to Falcon Match Selector</h1>
+          <p>Please choose a match to view and edit the details:</p>
+          
+        </div>
+      </div>
+</div>
